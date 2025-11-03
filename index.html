@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="es">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Página One-Page con Slider</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <style>
+    body {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      overflow-x: hidden;
+      height: 100%;
+    }
+
+    html {
+      height: 100%;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    .slider-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    .slider-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out;
+    }
+
+    .slider-image.active {
+      opacity: 1;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.4);
+      z-index: 2;
+    }
+
+    .content-wrapper {
+      position: relative;
+      z-index: 3;
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      padding: 2rem 1.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .logo {
+      max-width: 300px;
+      width: 100%;
+      height: auto;
+    }
+
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem 1.5rem;
+      text-align: center;
+    }
+
+    .footer {
+      padding: 1.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .title {
+      color: #ffffff;
+      font-size: 3rem;
+      font-weight: bold;
+      margin: 0 0 1rem 0;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .subtitle {
+      color: #ffffff;
+      font-size: 1.5rem;
+      margin: 0 0 2rem 0;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    }
+
+    .button-container {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .cta-button {
+      background-color: rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      border: 2px solid #ffffff;
+      padding: 1rem 2.5rem;
+      font-size: 1.125rem;
+      font-weight: 600;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+    }
+
+    .cta-button:hover {
+      background-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .cta-button.secondary {
+      background-color: transparent;
+      border: 2px solid rgba(255, 255, 255, 0.7);
+    }
+
+    .cta-button.secondary:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-color: #ffffff;
+    }
+
+    .contact-button {
+      background-color: transparent;
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      padding: 0.5rem 1.5rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    .contact-button:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.8);
+      transform: translateY(-1px);
+    }
+
+    @media (max-width: 768px) {
+      .logo {
+        max-width: 200px;
+      }
+
+      .title {
+        font-size: 2rem;
+      }
+
+      .subtitle {
+        font-size: 1.125rem;
+      }
+
+      .cta-button {
+        padding: 0.875rem 2rem;
+        font-size: 1rem;
+      }
+
+      .button-container {
+        gap: 1rem;
+      }
+
+      .header {
+        padding: 1.5rem 1rem;
+      }
+
+      .main-content {
+        padding: 1.5rem 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .logo {
+        max-width: 160px;
+      }
+
+      .title {
+        font-size: 1.5rem;
+      }
+
+      .subtitle {
+        font-size: 1rem;
+      }
+
+      .cta-button {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.9375rem;
+      }
+
+      .button-container {
+        gap: 0.75rem;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .cta-button {
+        width: 100%;
+        max-width: 250px;
+      }
+
+      .contact-button {
+        padding: 0.4rem 1.25rem;
+        font-size: 0.8125rem;
+      }
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body>
+  <div class="slider-container" id="sliderContainer"></div>
+  <div class="overlay"></div>
+  <div class="content-wrapper">
+   <header class="header"><img src="https://res.cloudinary.com/dczh5rxbe/image/upload/v1760455213/VERSION_HORIZONTAL_PNG_BLANCO_Mesa_de_trabajo_1_gxjiki.png" alt="Logo" class="logo" onerror="this.src=''; this.alt='Logo no disponible'; this.style.display='none';">
+   </header>
+   <main class="main-content">
+    <h1 class="title" id="mainTitle">BUCAY TRAIL - PRIMERA EDICIÓN</h1>
+    <div class="button-container"><button class="cta-button" id="ctaButton">Comprar Fotos</button>
+    </div>
+   </main>
+   <footer class="footer"><button class="contact-button" id="contactButton">Contactar Fotógrafo</button>
+   </footer>
+  </div>
+  <script>
+    const images = [
+      'https://res.cloudinary.com/dczh5rxbe/image/upload/v1762192975/DSC04654_c8wetc.jpg',
+      'https://res.cloudinary.com/dczh5rxbe/image/upload/v1762192974/DSC04843_owqoj2.jpg',
+      'https://res.cloudinary.com/dczh5rxbe/image/upload/v1762192974/DSC04794_do0sor.jpg',
+      'https://res.cloudinary.com/dczh5rxbe/image/upload/v1762192974/DSC04908_tssfwz.jpg',
+      'https://res.cloudinary.com/dczh5rxbe/image/upload/v1762192974/DSC04822_d1ifk6.jpg',
+      'https://res.cloudinary.com/dczh5rxbe/image/upload/v1762192974/DSC04901_aib1ku.jpg',
+      'https://res.cloudinary.com/dczh5rxbe/image/upload/v1762192973/DSC05091_j3iucm.jpg'
+    ];
+
+    const defaultConfig = {
+      main_title: 'BUCAY TRAIL - PRIMERA EDICIÓN',
+      button_text: 'Comprar Fotos',
+      contact_button_text: 'Contactar Fotógrafo',
+      background_color: '#000000',
+      text_color: '#ffffff',
+      button_color: '#ffffff',
+      font_family: 'Helvetica Neue',
+      font_size: 16
+    };
+
+    let currentIndex = 0;
+    const sliderContainer = document.getElementById('sliderContainer');
+
+    // Crear elementos de imagen para el slider
+    images.forEach((imageUrl, index) => {
+      const imageDiv = document.createElement('div');
+      imageDiv.className = 'slider-image';
+      imageDiv.style.backgroundImage = `url('${imageUrl}')`;
+      if (index === 0) {
+        imageDiv.classList.add('active');
+      }
+      sliderContainer.appendChild(imageDiv);
+    });
+
+    const imageElements = document.querySelectorAll('.slider-image');
+
+    function changeSlide() {
+      imageElements[currentIndex].classList.remove('active');
+      currentIndex = (currentIndex + 1) % images.length;
+      imageElements[currentIndex].classList.add('active');
+    }
+
+    // Cambiar imagen cada 4 segundos
+    setInterval(changeSlide, 4000);
+
+    // Funcionalidad de los botones
+    document.getElementById('ctaButton').addEventListener('click', function(e) {
+      e.preventDefault();
+      window.open('https://galerias.yorelcandofotografo.com/fotosbucaytrail/', '_blank', 'noopener,noreferrer');
+    });
+
+    document.getElementById('contactButton').addEventListener('click', function(e) {
+      e.preventDefault();
+      const message = document.createElement('div');
+      message.textContent = '¡Contáctanos para más información sobre las fotos!';
+      message.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(255, 255, 255, 0.95);
+        color: #333;
+        padding: 2rem 3rem;
+        border-radius: 10px;
+        font-size: 1.25rem;
+        font-weight: 600;
+        z-index: 1000;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      `;
+      document.body.appendChild(message);
+      setTimeout(() => {
+        message.remove();
+      }, 3000);
+    });
+
+    // Element SDK Implementation
+    async function onConfigChange(config) {
+      const titleElement = document.getElementById('mainTitle');
+      const buttonElement = document.getElementById('ctaButton');
+      const contactButtonElement = document.getElementById('contactButton');
+
+      titleElement.textContent = config.main_title || defaultConfig.main_title;
+      buttonElement.textContent = config.button_text || defaultConfig.button_text;
+      contactButtonElement.textContent = config.contact_button_text || defaultConfig.contact_button_text;
+
+      const customFont = config.font_family || defaultConfig.font_family;
+      const baseFontStack = 'Arial, sans-serif';
+      const baseSize = config.font_size || defaultConfig.font_size;
+
+      titleElement.style.fontFamily = `${customFont}, ${baseFontStack}`;
+      buttonElement.style.fontFamily = `${customFont}, ${baseFontStack}`;
+      contactButtonElement.style.fontFamily = `${customFont}, ${baseFontStack}`;
+
+      titleElement.style.fontSize = `${baseSize * 1.875}px`;
+      buttonElement.style.fontSize = `${baseSize * 0.703125}px`;
+      contactButtonElement.style.fontSize = `${baseSize * 0.546875}px`;
+
+      const textColor = config.text_color || defaultConfig.text_color;
+      const buttonColor = config.button_color || defaultConfig.button_color;
+
+      titleElement.style.color = textColor;
+      buttonElement.style.color = buttonColor;
+      buttonElement.style.borderColor = buttonColor;
+      contactButtonElement.style.color = buttonColor;
+      contactButtonElement.style.borderColor = buttonColor;
+    }
+
+    function mapToCapabilities(config) {
+      return {
+        recolorables: [
+          {
+            get: () => config.text_color || defaultConfig.text_color,
+            set: (value) => {
+              if (window.elementSdk) {
+                window.elementSdk.setConfig({ text_color: value });
+              }
+            }
+          },
+          {
+            get: () => config.button_color || defaultConfig.button_color,
+            set: (value) => {
+              if (window.elementSdk) {
+                window.elementSdk.setConfig({ button_color: value });
+              }
+            }
+          }
+        ],
+        borderables: [],
+        fontEditable: {
+          get: () => config.font_family || defaultConfig.font_family,
+          set: (value) => {
+            if (window.elementSdk) {
+              window.elementSdk.setConfig({ font_family: value });
+            }
+          }
+        },
+        fontSizeable: {
+          get: () => config.font_size || defaultConfig.font_size,
+          set: (value) => {
+            if (window.elementSdk) {
+              window.elementSdk.setConfig({ font_size: value });
+            }
+          }
+        }
+      };
+    }
+
+    function mapToEditPanelValues(config) {
+      return new Map([
+        ['main_title', config.main_title || defaultConfig.main_title],
+        ['button_text', config.button_text || defaultConfig.button_text],
+        ['contact_button_text', config.contact_button_text || defaultConfig.contact_button_text]
+      ]);
+    }
+
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities,
+        mapToEditPanelValues
+      });
+    }
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'998dddec71f8825b',t:'MTc2MjE5MzgzMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
